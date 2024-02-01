@@ -54,10 +54,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.7.9</version>
-					<configuration>
-						<mainClass>ru.yandex.practicum.filmorate.FilmorateApplication.main</mainClass>
-					</configuration>
 			</plugin>
 		</plugins>
 	</build>
