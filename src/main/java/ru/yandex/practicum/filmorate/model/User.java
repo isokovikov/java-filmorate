@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
-import org.intellij.lang.annotations.Identifier;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
