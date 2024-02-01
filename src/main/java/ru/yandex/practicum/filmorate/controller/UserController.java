@@ -22,18 +22,18 @@ public class UserController {
         userValidation(user);
         user.setId(getNextUserId());
         users.put(user.getId(), user);
-        log.info("A new user has been added");
+        log.info("A new user " + user.getLogin() + " has been added");
         return user;
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
         userValidation(user);
-        if (!(users.keySet().contains(user.getId()))) {
-            throw new ValidationException("User unknown");
+        if (!(users.containsKey(user.getId()))) {
+            throw new ValidationException("User with ID " + user.getId() + " unknown");
         }
         users.put(user.getId(), user);
-        log.info("User was updated");
+        log.info("User with ID " + user.getId() + " was updated");
         return user;
     }
 

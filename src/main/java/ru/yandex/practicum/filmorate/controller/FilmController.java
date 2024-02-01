@@ -25,18 +25,18 @@ public class FilmController {
         filmValidation(film);
         film.setId(getNextFilmId());
         films.put(film.getId(), film);
-        log.info("A new film has been added");
+        log.info("A new film " + film.getName() + " has been added, " + film.getId());
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
         filmValidation(film);
-        if (!(films.keySet().contains(film.getId()))) {
-            throw new ValidationException("Film unknown");
+        if (!(films.containsKey(film.getId()))) {
+            throw new ValidationException("Film with ID " + film.getId() + " is unknown.");
         }
         films.put(film.getId(), film);
-        log.info("Film was updated");
+        log.info("Film with ID " + film.getId() + " was updated");
         return film;
     }
 
