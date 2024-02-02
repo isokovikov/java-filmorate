@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        if (userStorage.getById(user.getId()).isPresent()){
+        if (userStorage.getById(user.getId()).isPresent()) {
             nameEqualsLogin(user);
             return userStorage.update(user);
         } else {
