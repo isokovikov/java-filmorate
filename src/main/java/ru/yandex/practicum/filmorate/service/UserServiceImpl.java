@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllFriends(Integer userId) {
-        if(userStorage.getById(userId).isPresent()) {
+        if (userStorage.getById(userId).isPresent()) {
             return userStorage.getById(userId).get().getFriendsId()
                     .stream()
                     .map(this::getById)
