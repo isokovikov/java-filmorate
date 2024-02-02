@@ -5,11 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -20,6 +22,7 @@ import java.util.List;
 public class FilmController {
 
     private final FilmService filmService;
+    private final LocalDate earlyDate = LocalDate.of(1895, 12, 28);
 
     @GetMapping
     public List<Film> returnAll() {
@@ -42,17 +45,19 @@ public class FilmController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film addNew(@Valid @RequestBody Film film) {
+        filmValidation(film);
         log.info("Request POST /films received");
         Film addFilm = filmService.addNew(film);
-        log.info("A new film has been added");
+        log.info("A new film " + film.getName() + " has been added, " + film.getId());
         return addFilm;
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
+        filmValidation(film);
         log.info("Request PUT /films received");
         Film updateFilm = filmService.update(film);
-        log.info("Film was updated");
+        log.info("Film with ID " + film.getId() + " was updated");
         return updateFilm;
     }
 
@@ -79,5 +84,20 @@ public class FilmController {
         log.info("FLike was deleted");
         return film;
 
+    }
+
+    private void filmValidation(Film film) {
+        if (film == null) {
+            throw new ValidationException("Film cannot be null");
+        }
+
+        if (film.getReleaseDate() == null) {
+            throw new ValidationException("Release date cannot be null");
+        }
+
+        if (film.getReleaseDate().isBefore(earlyDate)) {
+            log.info("The film failed validation: release date is too early");
+            throw new ValidationException("Release date — no earlier than December 28, 1895");
+        }
     }
 }

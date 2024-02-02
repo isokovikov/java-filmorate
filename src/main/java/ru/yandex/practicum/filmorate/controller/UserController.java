@@ -55,9 +55,10 @@ public class UserController {
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
+        userValidation(user);
         log.info("Request PUT /users");
         User updateUser = userService.update(user);
-        log.info("User was updated");
+        log.info("User with ID " + user.getId() + " was updated");
         return updateUser;
     }
 
