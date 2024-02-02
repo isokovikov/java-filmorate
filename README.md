@@ -1,2 +1,5 @@
 # java-filmorate
-Template repository for Filmorate project.
+Spring Boot приложение Filmorate
+
+## ER - диаграмма
+![This is an image](src/main/resources/ER_diagram.png)
