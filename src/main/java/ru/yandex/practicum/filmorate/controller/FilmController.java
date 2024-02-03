@@ -32,7 +32,7 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public Film getById(@PathVariable Integer id) {
-        log.info("Request GET /films/{id} received");
+        log.info("Request GET /films/{} received", id);
         return filmService.getById(id);
     }
 
@@ -63,15 +63,14 @@ public class FilmController {
 
     @PutMapping("/{id}/like/{userId}")
     public Film addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        log.info("Request PUT /films/{id}/like/{userId} received");
-        Film film = filmService.addLike(id,userId);
+        log.info("Request PUT /films/{}/like/{} received", id, userId);
         log.info("Like added!");
-        return film;
+        return filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}")
     public Film deleteById(@PathVariable Integer id) {
-        log.info("Request DELETE /users/{id}");
+        log.info("Request DELETE /users/{}", id);
         Film removeFilm = filmService.remove(id);
         log.info("User was deleted");
         return removeFilm;
@@ -79,7 +78,7 @@ public class FilmController {
 
     @DeleteMapping("/{id}/like/{userId}")
     public Film removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        log.info("Request DELETE /films/{id}/like/{userId} received");
+        log.info("Request DELETE /films/{}/like/{} received", id, userId);
         Film film = filmService.removeLike(id, userId);
         log.info("FLike was deleted");
         return film;

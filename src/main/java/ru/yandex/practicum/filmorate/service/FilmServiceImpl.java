@@ -1,12 +1,13 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,6 @@ public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
-    @Autowired
     public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
@@ -57,34 +57,36 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film addLike(Integer filmId, Integer userId) {
-        if (filmStorage.getById(filmId).isPresent() && userStorage.getById(userId).isPresent()) {
-            Film film = filmStorage.getById(filmId).get();
-            film.getLikes().add(userId);
-            return filmStorage.update(film);
-        } else {
-            throw new FilmNotFoundException("Film or User was not found");
-        }
+        // Проверяем наличие фильма
+        Film film = filmStorage.getById(filmId)
+                .orElseThrow(() -> new FilmNotFoundException("Film with ID " + filmId + " was not found"));
 
+        // Проверяем наличие пользователя
+        userStorage.getById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " was not found"));
+
+        // Добавляем лайк к фильму и обновляем его
+        film.getLikes().add(userId);
+        return filmStorage.update(film);
     }
 
     @Override
     public Film removeLike(Integer filmId, Integer userId) {
-        if (filmStorage.getById(filmId).isPresent() && userStorage.getById(userId).isPresent()) {
-            Film film = filmStorage.getById(filmId).get();
+        Film film = filmStorage.getById(filmId)
+                .orElseThrow(() -> new FilmNotFoundException("Film with ID " + filmId + " was not found"));
 
-            film.getLikes().remove(userId);
-            return filmStorage.update(film);
-        } else {
-            throw new FilmNotFoundException("Film or User was not found");
-        }
+        userStorage.getById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " was not found"));
+
+        film.getLikes().remove(userId);
+        return filmStorage.update(film);
     }
 
     @Override
     public List<Film> getPopular(Integer count) {
-        List<Film> films = filmStorage.getList();
-        return films
+        return filmStorage.getList()
                 .stream()
-                .sorted((f1,f2) -> Integer.compare(f2.getLikes().size(), f1.getLikes().size()))
+                .sorted(Comparator.comparingInt((Film f) -> f.getLikes().size()).reversed())
                 .limit(count)
                 .collect(Collectors.toList());
     }
