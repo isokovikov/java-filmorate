@@ -1,12 +1,13 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Repository
@@ -24,6 +25,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film update(Film film) {
+        if (!films.containsKey(film.getId())) {
+            throw new FilmNotFoundException("Film with ID " + film.getId() + " does not exist.");
+        }
         return films.put(film.getId(), film);
     }
 
