@@ -18,7 +18,7 @@ class UserControllerTest {
 
     @Test
     void validationUserTest() {
-        User inavalidUser = new User(); // test null
+        User inavalidUser = new User(id, email, login, name, userBirthday); // test null
         assertThrows(ValidationException.class, () -> userController.addNew(inavalidUser));
     }
 }
