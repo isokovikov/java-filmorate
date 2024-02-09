@@ -73,7 +73,7 @@ public class FilmDbStorage implements FilmStorage {
 
     private void saveGenresToFilm(Film film) {
         final Integer filmId = film.getId();
-        final LinkedHashSet<Genre> genres =film.getGenres();
+        final LinkedHashSet<Genre> genres = film.getGenres();
         if (genres == null || genres.isEmpty()) {
             return;
         }
@@ -139,9 +139,9 @@ public class FilmDbStorage implements FilmStorage {
         String description = rs.getString("DESCRIPTION");
         Date releaseDate = rs.getDate("RELEASE_DATE");
         int duration = rs.getInt("DURATION");
-        int mpa_id = rs.getInt("MPA_ID");
-        String mpa_name = rs.getString("MPA_NAME");
-        Mpa mpa = new Mpa(mpa_id, mpa_name);
+        int mpaId = rs.getInt("MPA_ID");
+        String mpaName = rs.getString("MPA_NAME");
+        Mpa mpa = new Mpa(mpaId, mpaName);
         LocalDate filmRelease = null;
 
         if (releaseDate != null) {
