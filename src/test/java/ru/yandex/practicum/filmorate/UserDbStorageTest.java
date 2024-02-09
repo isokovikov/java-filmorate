@@ -32,8 +32,8 @@ public class UserDbStorageTest {
     @BeforeEach
     public void createUser() {
         user = new User();
-        user.setLogin("blackRaven");
         user.setName("Jon Snow");
+        user.setLogin("blackRaven");
         user.setEmail("snow99mail.ru");
         user.setBirthday(LocalDate.of(1986, 12, 26));
     }
@@ -51,7 +51,6 @@ public class UserDbStorageTest {
 
     @Test
     public void testUpdateUser() {
-
         userStorage.addNew(user);
         user.setId(1);
         user.setLogin("blackRaven86");
@@ -103,9 +102,9 @@ public class UserDbStorageTest {
         userStorage.addNew(user);
         user.setId(1);
         User user2 = new User();
+        user2.setLogin("blackRaven88");
         user2.setName("Sam Tarly");
         user2.setEmail("tarly88mail.ru");
-        user2.setLogin("blackRaven88");
         user2.setBirthday(LocalDate.of(1988, 9, 5));
         userStorage.addNew(user2);
         user2.setId(2);
