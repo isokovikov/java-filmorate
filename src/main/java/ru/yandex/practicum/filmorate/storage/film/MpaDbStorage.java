@@ -23,16 +23,15 @@ public class MpaDbStorage implements MpaStorage {
     @Override
     public List<Mpa> findAll() {
         String sqlQuery = "select * from MOTION_PICTURE_ASSOCIATIONS";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeMpa(rs, rowNum));
+        return jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa);
     }
 
     @Override
     public Optional<Mpa> getMpaByID(int id) {
         String sqlQuery = "select * from MOTION_PICTURE_ASSOCIATIONS where MPA_ID = ?";
-        List<Mpa> MpaRows = jdbcTemplate.query(sqlQuery, (rs, rowNum) ->
-                makeMpa(rs, rowNum), id);
-        if (MpaRows.size() > 0) {
-            Mpa mpa = MpaRows.get(0);
+        List<Mpa> mpaRows = jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa, id);
+        if (mpaRows.size() > 0) {
+            Mpa mpa = mpaRows.get(0);
             log.info("The MPA rating by id was found: {} {}", mpa.getName(), id);
             return Optional.of(mpa);
         } else {
