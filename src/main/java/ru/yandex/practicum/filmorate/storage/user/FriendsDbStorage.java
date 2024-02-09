@@ -60,7 +60,7 @@ public class FriendsDbStorage implements FriendsStorage {
         String name = resultSet.getString("USER_NAME");
         Date birthday = resultSet.getDate("BIRTHDAY");
         LocalDate userBirthday = null;
-        if(birthday != null) {
+        if (birthday != null) {
             userBirthday = birthday.toLocalDate();
         }
         return new User(id, email, login, name, userBirthday);
