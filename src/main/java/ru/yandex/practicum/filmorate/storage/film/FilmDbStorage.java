@@ -31,7 +31,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getList() {
-        String sqlQuery = "select * from FILMS as f inner join MOTION_PICTURE_ASSOCIATIONS as mpa on f.MPA_ID = mpa.MPA_ID";
+        String sqlQuery = "select * from FILMS as f inner join MPA as mpa on f.MPA_ID = mpa.MPA_ID";
         return jdbcTemplate.query(sqlQuery, this::makeFilm);
     }
 
@@ -102,7 +102,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getById(Integer id) {
-        String sqlQuery = "select * from FILMS as f inner join MOTION_PICTURE_ASSOCIATIONS as mpa on f.MPA_ID = mpa.MPA_ID where FILM_ID = ?";
+        String sqlQuery = "select * from FILMS as f inner join MPA as mpa on f.MPA_ID = mpa.MPA_ID where FILM_ID = ?";
         List<Film> filmRows = jdbcTemplate.query(sqlQuery, this::makeFilm, id);
         if (filmRows.size() > 0) {
             Film film = filmRows.get(0);
@@ -125,7 +125,7 @@ public class FilmDbStorage implements FilmStorage {
 
         String sqlQuery = "SELECT * " +
                 "FROM FILMS AS f " +
-                "INNER JOIN MOTION_PICTURE_ASSOCIATIONS as mpa on f.MPA_ID = mpa.MPA_ID " +
+                "INNER JOIN MPA as mpa on f.MPA_ID = mpa.MPA_ID " +
                 "LEFT OUTER JOIN LIKES AS l ON f.FILM_ID = l.FILM_ID " +
                 "GROUP BY f.FILM_ID " +
                 "ORDER BY COUNT(l.USER_ID) DESC " +

@@ -9,15 +9,15 @@ public interface UserService {
 
     User update(User user);
 
-    User remove(Integer id);
+    void remove(User yser);
 
     User getById(Integer id);
 
     List<User> getList();
 
-    User addFriend(Integer id, Integer friendId);
+    void addFriend(Integer id, Integer friendId);
 
-    User removeFriend(Integer userId, Integer friendId);
+    void removeFriend(Integer userId, Integer friendId);
 
     List<User> getCommonFriends(Integer userId, Integer otherId);
 

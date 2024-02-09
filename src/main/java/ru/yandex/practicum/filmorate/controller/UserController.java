@@ -62,26 +62,28 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public boolean addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Request PUT /users/{}/friends/{}", id, friendId);
+        userService.addFriend(id, friendId);
         log.info("Friend was added");
-        return userService.addFriend(id, friendId);
+        return true;
     }
 
     @DeleteMapping("/{id}")
     public User deleteById(@PathVariable Integer id) {
         log.info("Request DELETE /users/{}", id);
-        User removeUser = userService.remove(id);
+        User removeUser = userService.getById(id);
+        userService.remove(removeUser);
         log.info("User was deleted");
         return removeUser;
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public User removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public boolean removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Request DELETE /users/{}/friends/{}", id, friendId);
-        User user = userService.removeFriend(id, friendId);
+        userService.removeFriend(id, friendId);
         log.info("Friend was deleted");
-        return user;
+        return true;
     }
 
     private void userValidation(User user) {
