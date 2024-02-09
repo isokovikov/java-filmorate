@@ -48,6 +48,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
+        if (userId < 0 || friendId < 0) {
+            throw new UserNotFoundException("ID " + userId + " or " + friendId + " not found.");
+        }
         friendsStorage.addFriend(userId, friendId);
     }
 

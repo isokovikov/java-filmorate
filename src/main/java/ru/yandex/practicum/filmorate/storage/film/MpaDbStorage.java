@@ -22,13 +22,13 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> findAll() {
-        String sqlQuery = "select * from MOTION_PICTURE_ASSOCIATIONS";
+        String sqlQuery = "select * from MPA";
         return jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa);
     }
 
     @Override
     public Optional<Mpa> getMpaByID(int id) {
-        String sqlQuery = "select * from MOTION_PICTURE_ASSOCIATIONS where MPA_ID = ?";
+        String sqlQuery = "select * from MPA where MPA_ID = ?";
         List<Mpa> mpaRows = jdbcTemplate.query(sqlQuery, MpaDbStorage::makeMpa, id);
         if (mpaRows.size() > 0) {
             Mpa mpa = mpaRows.get(0);

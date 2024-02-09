@@ -32,13 +32,13 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User addNew(User user) {
-        String sqlQuery = "insert into USERS(USER_NAME, EMAIL, LOGIN, BIRTHDAY) values (?, ?, ?, ?)";
+        String sqlQuery = "insert into USERS(LOGIN, USER_NAME, EMAIL, BIRTHDAY) values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"USER_ID"});
+            stmt.setString(3, user.getLogin());
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getLogin());
             stmt.setDate(4, Date.valueOf(user.getBirthday()));
             return stmt;
         }, keyHolder);

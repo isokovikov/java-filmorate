@@ -64,6 +64,7 @@ public class FilmController {
     @PutMapping("/{id}/like/{userId}")
     public boolean addLike(@PathVariable Integer id, @PathVariable Integer userId) {
         log.info("Request PUT /films/{}/like/{} received", id, userId);
+        filmService.addLike(id, userId);
         log.info("Like added!");
         return true;
     }
