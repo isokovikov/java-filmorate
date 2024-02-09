@@ -2,9 +2,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.storage.user.FriendsStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -38,24 +36,21 @@ public class FriendsDbStorage implements FriendsStorage {
     @Override
     public List<User> getFriends(Integer userId) {
         String sqlQuery = "select * from USERS, FRIENDS where USERS.USER_ID = FRIENDS.FRIEND_ID AND FRIENDS.USER_ID = ?";
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs, rowNum), userId);
+        return jdbcTemplate.query(sqlQuery, FriendsDbStorage::makeUser, userId);
     }
 
     @Override
     public List<User> commonFriends(Integer userId, Integer friendId) {
-        StringBuilder str = new StringBuilder();
-        str.append("SELECT u.USER_ID,")
-                .append("u.EMAIL,")
-                .append("u.LOGIN,")
-                .append("u.USER_NAME,")
-                .append("u.BIRTHDAY ")
-                .append("FROM FRIENDS AS fr1 ")
-                .append("INNER JOIN FRIENDS AS fr2 ON fr1.FRIEND_ID = fr2.FRIEND_ID ")
-                .append("LEFT OUTER JOIN USERS u ON fr1.FRIEND_ID = u.USER_ID ")
-                .append("WHERE fr1.USER_ID = ? AND fr2.USER_ID = ? ");
-
-        String sqlQuery = str.toString();
-        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs, rowNum), userId, friendId);
+        String sqlQuery = "SELECT u.USER_ID," +
+                "u.EMAIL," +
+                "u.LOGIN," +
+                "u.USER_NAME," +
+                "u.BIRTHDAY " +
+                "FROM FRIENDS AS fr1 " +
+                "INNER JOIN FRIENDS AS fr2 ON fr1.FRIEND_ID = fr2.FRIEND_ID " +
+                "LEFT OUTER JOIN USERS u ON fr1.FRIEND_ID = u.USER_ID " +
+                "WHERE fr1.USER_ID = ? AND fr2.USER_ID = ? ";
+        return jdbcTemplate.query(sqlQuery, FriendsDbStorage::makeUser, userId, friendId);
     }
 
     private static User makeUser(ResultSet resultSet, int rowNum) throws SQLException {
@@ -65,7 +60,7 @@ public class FriendsDbStorage implements FriendsStorage {
         String name = resultSet.getString("USER_NAME");
         Date birthday = resultSet.getDate("BIRTHDAY");
         LocalDate userBirthday = null;
-        if(birthday != null) {
+        if (birthday != null) {
             userBirthday = birthday.toLocalDate();
         }
         return new User(id, email, login, name, userBirthday);

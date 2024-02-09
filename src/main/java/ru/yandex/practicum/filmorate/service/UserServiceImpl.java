@@ -9,8 +9,6 @@ import ru.yandex.practicum.filmorate.storage.user.FriendsStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +48,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {
+        if (userId < 0 || friendId < 0) {
+            throw new UserNotFoundException("ID " + userId + " or " + friendId + " not found.");
+        }
         friendsStorage.addFriend(userId, friendId);
     }
 

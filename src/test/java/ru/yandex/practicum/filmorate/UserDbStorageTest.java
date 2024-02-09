@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -33,9 +32,9 @@ public class UserDbStorageTest {
     @BeforeEach
     public void createUser() {
         user = new User();
+        user.setLogin("blackRaven");
         user.setName("Jon Snow");
         user.setEmail("snow99mail.ru");
-        user.setLogin("blackRaven");
         user.setBirthday(LocalDate.of(1986, 12, 26));
     }
 

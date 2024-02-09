@@ -35,6 +35,7 @@ public class ErrorHandler {
         log.error("No Valid Positive Argument Popular Films {}", ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidEmailException(final ValidationException exception) {

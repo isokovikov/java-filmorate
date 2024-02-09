@@ -2,18 +2,13 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.film.LikesStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +44,7 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getList() {
         List<Film> makeGenre = new ArrayList<>();
         List<Film> getList = new ArrayList<>();
-        for(Film film : filmStorage.getList()) {
+        for (Film film : filmStorage.getList()) {
             makeGenre.clear();
             makeGenre.add(film);
             genreStorage.loadGenreToFilm(makeGenre);

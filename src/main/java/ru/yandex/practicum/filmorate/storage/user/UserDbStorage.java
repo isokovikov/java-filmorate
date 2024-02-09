@@ -1,16 +1,12 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -35,14 +31,14 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User addNew (User user) {
-        String sqlQuery = "insert into USERS(USER_NAME, EMAIL, LOGIN, BIRTHDAY) values (?, ?, ?, ?)";
+    public User addNew(User user) {
+        String sqlQuery = "insert into USERS(LOGIN, USER_NAME, EMAIL, BIRTHDAY) values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"USER_ID"});
+            stmt.setString(3, user.getLogin());
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getLogin());
             stmt.setDate(4, Date.valueOf(user.getBirthday()));
             return stmt;
         }, keyHolder);
@@ -67,7 +63,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public void remove(User user) {
         String sqlQuery = "delete from USERS where USER_ID = ?";
-        if(jdbcTemplate.update(sqlQuery, user.getId()) >0) {
+        if (jdbcTemplate.update(sqlQuery, user.getId()) > 0) {
             log.info("User with ID {} was remove", user.getId());
         } else {
             throw new UserNotFoundException("Couldn't delete user with id " + user.getId());
@@ -79,7 +75,7 @@ public class UserDbStorage implements UserStorage {
 
         String sqlQuery = "select * from USERS where USER_ID = ?";
         List<User> userRows = jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser, id);
-        if(userRows.size() > 0) {
+        if (userRows.size() > 0) {
             User user = userRows.get(0);
             log.info("User found: {} {}", user.getId(), user.getLogin());
             return Optional.of(user);
@@ -95,7 +91,7 @@ public class UserDbStorage implements UserStorage {
         String name = resultSet.getString("USER_NAME");
         Date birthday = resultSet.getDate("BIRTHDAY");
         LocalDate userBirthday = null;
-        if(birthday != null) {
+        if (birthday != null) {
             userBirthday = birthday.toLocalDate();
         }
         return new User(id, email, login, name, userBirthday);
