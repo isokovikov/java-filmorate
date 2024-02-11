@@ -62,7 +62,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public void remove(User user) {
         //Добавление проверки существования пользователя перед удалением
-        String checkSql = "select count(*) form USERS where USER_ID = ?";
+        String checkSql = "select count(*) from USERS where USER_ID = ?";
         Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, user.getId());
         if (count == null || count == 0) {
             throw new UserNotFoundException("User with id " + user.getId() + " does not exist.");
