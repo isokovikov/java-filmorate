@@ -10,10 +10,9 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -27,7 +26,7 @@ public class UserDbStorage implements UserStorage {
 
     public List<User> getList() {
         String sqlQuery = "select * from USERS";
-        return jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser);
+        return jdbcTemplate.query(sqlQuery, new UserMapper());
     }
 
     @Override
@@ -62,39 +61,32 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void remove(User user) {
+        //Добавление проверки существования пользователя перед удалением
+        String checkSql = "select count(*) form USERS where USER_ID = ?";
+        Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, user.getId());
+        if (count == null || count == 0) {
+            throw new UserNotFoundException("User with id " + user.getId() + " does not exist.");
+        }
+
         String sqlQuery = "delete from USERS where USER_ID = ?";
         if (jdbcTemplate.update(sqlQuery, user.getId()) > 0) {
-            log.info("User with ID {} was remove", user.getId());
+            log.info("User with ID {} was removed", user.getId());
         } else {
-            throw new UserNotFoundException("Couldn't delete user with id " + user.getId());
+            log.info("User with ID {} was not removed", user.getId());
         }
     }
 
     @Override
     public Optional<User> getById(Integer id) {
-
         String sqlQuery = "select * from USERS where USER_ID = ?";
-        List<User> userRows = jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser, id);
-        if (userRows.size() > 0) {
+        List<User> userRows = jdbcTemplate.query(sqlQuery, new UserMapper(), id);
+        if (!userRows.isEmpty()) {
             User user = userRows.get(0);
             log.info("User found: {} {}", user.getId(), user.getLogin());
             return Optional.of(user);
         } else {
             return Optional.empty();
         }
-    }
-
-    private static User makeUser(ResultSet resultSet, int rowNum) throws SQLException {
-        Integer id = resultSet.getInt("USER_ID");
-        String email = resultSet.getString("EMAIL");
-        String login = resultSet.getString("LOGIN");
-        String name = resultSet.getString("USER_NAME");
-        Date birthday = resultSet.getDate("BIRTHDAY");
-        LocalDate userBirthday = null;
-        if (birthday != null) {
-            userBirthday = birthday.toLocalDate();
-        }
-        return new User(id, email, login, name, userBirthday);
     }
 
 }
