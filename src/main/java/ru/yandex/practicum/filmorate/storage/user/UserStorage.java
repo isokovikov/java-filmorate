@@ -10,7 +10,7 @@ public interface UserStorage {
 
     User update(User user);
 
-    User remove(Integer id);
+    void remove(User user);
 
     Optional<User> getById(Integer id);
 
